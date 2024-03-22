@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1-Bit Pixel Art Tool</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #FFF1E8;
+    }
+
+    canvas {
+      border: 1px solid black;
+      background-color: #FFF1E8;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="pixelCanvas" width="1000" height="1000"></canvas>
+  <script>
+    const canvas = document.getElementById('pixelCanvas');
+    const ctx = canvas.getContext('2d');
+    const pixelSize = 20; // Size of each pixel
+    const rows = canvas.height / pixelSize;
+    const cols = canvas.width / pixelSize;
+    const p8white = "#FFF1E8"
+    let grid = createGrid(rows, cols);
+    let isDrawing = false;
+    let initialPixelState = null; // Track initial state of the pixel before mouse click
+
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseup', handleMouseUp);
+
+    function createGrid(rows, cols) {
+      const grid = [];
+      for (let i = 0; i < rows; i++) {
+        grid.push(Array(cols).fill(0));
+      }
+      return grid;
+    }
+
+    function drawGrid() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+      ctx.fillStyle = p8white; // Set background color
+      ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill canvas with background color
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          ctx.fillStyle = grid[i][j] ? 'black' : p8white;
+          ctx.fillRect(j * pixelSize, i * pixelSize, pixelSize, pixelSize);
+        }
+      }
+    }
+
+    function handleMouseDown(event) {
+      isDrawing = true;
+      initialPixelState = grid[Math.floor(event.offsetY / pixelSize)][Math.floor(event.offsetX / pixelSize)];
+      updatePixel(event);
+    }
+
+    function handleMouseMove(event) {
+      if (isDrawing) {
+        updatePixel(event);
+      }
+    }
+
+    function handleMouseUp() {
+      isDrawing = false;
+    }
+
+    function updatePixel(event) {
+      const x = Math.floor(event.offsetX / pixelSize);
+      const y = Math.floor(event.offsetY / pixelSize);
+      const currentPixelState = grid[y][x];
+      if (currentPixelState !== (initialPixelState ? 0 : 1)) {
+        grid[y][x] = initialPixelState ? 0 : 1;
+        drawGrid();
+      }
+    }
+
+    drawGrid();
+  </script>
+</body>
+
+</html>
