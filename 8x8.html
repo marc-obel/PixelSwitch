@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Switch 8x8</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #FFF1E8;
+    }
+
+    .container {
+      display: grid;
+      padding: 50px;
+      grid-template-columns: repeat(8, minmax(10px, 1fr));
+      grid-template-rows: repeat(8, minmax(10px, 1fr));
+      gap: 2px;
+      overflow-x: auto;
+    }
+
+    .pixel {
+      width: 50px;
+      height: 50px;
+      background-color: FFF1E8;
+      border: 1px solid black;
+    }
+
+    .pixel input[type="checkbox"] {
+      display: none;
+    }
+
+    .pixel input[type="checkbox"]:checked+label {
+      background-color: black;
+    }
+
+    .pixel label {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="container">
+  </div>
+</body>
+
+<script>
+  function addPixels(amount) {
+    var container = document.getElementById("container");
+    for (var i = 0; i < amount; i++) {
+      var pixelDiv = document.createElement("div");
+      pixelDiv.classList.add("pixel");
+      var checkbox = document.createElement("input");
+      checkbox.setAttribute("type", "checkbox");
+      checkbox.id = "pixel" + (i + 1);
+      var label = document.createElement("label");
+      label.setAttribute("for", "pixel" + (i + 1));
+      pixelDiv.appendChild(checkbox);
+      pixelDiv.appendChild(label);
+      container.appendChild(pixelDiv);
+    }
+  }
+
+  addPixels(8 * 8);
+  document.getElementById("toggleWidth").addEventListener("click", function () {
+    document.getElementById("container").classList.toggle("full-width");
+  });
+</script>
+
+</html>
